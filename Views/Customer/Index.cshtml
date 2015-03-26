@@ -1,0 +1,60 @@
+﻿@using System
+@using PagedList.Mvc
+@model PagedList.StaticPagedList<MagentoCustomers.local.magento.v2.mezaitCustomerAddress>
+@{
+    ViewBag.Title = "Customers";
+}
+<h2>
+    @ViewBag.Title</h2>
+@using (Html.BeginForm("Index", "Customer", FormMethod.Get))
+{
+    <div class="input-group">
+        @Html.TextBox("surname", String.Empty, new { @class = "form-control", placeholder = "Search by surname" })
+        <span class="input-group-btn">
+            <input type="submit" value="Search" class="btn btn-default" />
+            @Html.ActionLink("Clear", "Index", "Customer", new { }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+}
+<br />
+<h4>
+    @ViewBag.Count customer(s)
+    @if (!String.IsNullOrEmpty(ViewBag.Surname))
+    {
+        <text>with the surname:</text> @ViewBag.Surname
+    }</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Surname
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Street
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.customer.lastname
+                </td>
+                <td>@customer.customer.firstname
+                </td>
+                <td>@customer.customer.email
+                </td>
+                <td>@customer.address.street
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, surname = @ViewBag.Surname }),
+                     new PagedListRenderOptions { ContainerDivClasses = new[] { "text-center" }, UlElementClasses = new[] { "pagination" } })
